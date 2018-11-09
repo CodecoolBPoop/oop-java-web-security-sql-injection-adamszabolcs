@@ -15,9 +15,16 @@ public class TodoDaoImplWithJdbc implements TodoDao {
 
     @Override
     public void add(Todo todo) {
-        String query = "INSERT INTO todos (title, id, status) " +
-                "VALUES ('" + todo.title + "', '" + todo.id + "', '" + todo.status + "');";
-        executeQuery(query);
+        try (Connection connection = getConnection();
+             PreparedStatement insert = connection.prepareStatement("INSERT INTO todos (title, id, status) VALUES (?,?,?);");
+        ){
+            insert.setString(1, todo.title);
+            insert.setString(2, todo.id);
+            insert.setString(3, todo.status.toString());
+            insert.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -47,8 +54,15 @@ public class TodoDaoImplWithJdbc implements TodoDao {
 
     @Override
     public void update(String id, String title) {
-        String query = "UPDATE todos SET title = '" + title + "' WHERE id = '" + id + "';";
-        executeQuery(query);
+        try (Connection connection = getConnection();
+             PreparedStatement update = connection.prepareStatement("UPDATE todos SET title=? WHERE id=?;");
+        ){
+            update.setString(1, title);
+            update.setString(2, id);
+            update.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
