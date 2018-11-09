@@ -1,2 +1,4 @@
 With the following input I managed to commit SQL injection:
 <put your 'solution' here>
+1. Double clicked on one item, on the edit mode, wrote this:
+'; DROP TABLE todos --
